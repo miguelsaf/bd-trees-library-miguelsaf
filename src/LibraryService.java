@@ -1,5 +1,13 @@
+import model.Book;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import treestructure.BookNode;
+
+import java.util.ArrayDeque;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * Application to test traversing Binary Trees and Binary Search Trees.
@@ -35,8 +43,20 @@ public class LibraryService {
      */
     public boolean isBookInLibraryByIsbn(String isbn) {
         // PARTICIPANTS: IMPLEMENT YOUR BINARY SEARCH HERE
+        if(StringUtils.isBlank(isbn)) return false;
 
-        throw new NotImplementedException("isBookInLibraryByIsbn is not yet implemented!");
+        BookNode p = books;
+
+        while ( p != null && !p.getBook().getIsbn().equals(isbn)){
+            if( isbn.compareTo(p.getBook().getIsbn()) < 0 ){
+                p = p.getLeft();
+            }else {
+                p = p.getRight();
+            }
+        }
+        if(p == null) return false;
+        return true;
+        //throw new NotImplementedException("isBookInLibraryByIsbn is not yet implemented!");
     }
 
 
@@ -51,7 +71,24 @@ public class LibraryService {
      */
     public boolean isBookInLibraryByTitleAndAuthor(String title, String author) {
         // PARTICIPANTS: IMPLEMENT YOUR DEPTH FIRST SEARCH HERE
+        if(StringUtils.isBlank(title)) return false;
+        if(StringUtils.isBlank(author)) return false;
 
-        throw new NotImplementedException("isBookInLibraryByTitleAndAuthor is not yet implemented!");
+        BookNode p;
+        Stack<BookNode> bookNodeStack = new Stack<>();
+        bookNodeStack.push(books);
+
+        while ( !bookNodeStack.isEmpty() ){
+            p = bookNodeStack.pop();
+            if(p.getBook().getAuthor().equals(author) && p.getBook().getTitle().equals(title)){
+                return true;
+            }
+            if(p.getLeft() != null ) bookNodeStack.push(p.getLeft());
+            if(p.getRight() != null ) bookNodeStack.push(p.getRight());
+            //bookNodeStack.pop();
+        }
+        return false;
+
+        //throw new NotImplementedException("isBookInLibraryByTitleAndAuthor is not yet implemented!");
     }
 }
